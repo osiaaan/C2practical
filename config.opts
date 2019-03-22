@@ -1,0 +1,20 @@
+#set that to correct path
+DUNEPATH=/home/masdoc/Documents/c2/C2
+
+INSTALLPATH=$DUNEPATH
+
+OFLAGS0="-g -Wall -Wfatal-errors"
+OFLAGS1="-O1 -funroll-loops -finline-functions -Wall -Wfatal-errors"
+OFLAGS2="-O2 -funroll-loops -finline-functions -Wall -Wfatal-errors"
+OFLAGS3="-O3 -DNDEBUG\
+  -funroll-loops -finline-functions \
+  -ffast-math -fomit-frame-pointer -march=opteron -msse3 -mfpmath=sse \
+   -Wall -Wfatal-errors"
+OPTIMFLAGS=$OFLAGS1
+
+CONFIGURE_FLAGS="\
+  --prefix=$INSTALLPATH \
+  --disable-documentation \
+  --enable-fieldvector-size-is-method \
+  CXXFLAGS=\"$OPTIMFLAGS\" "
+MAKE_FLAGS=

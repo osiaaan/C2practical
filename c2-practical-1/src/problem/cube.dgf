@@ -1,0 +1,14 @@
+DGF
+Vertex
+-2 -2
+2 -2
+2 2
+-2 2
+#
+Simplex
+1 2 0
+3 0 2
+#
+BOUNDARYDOMAIN
+default 1
+#

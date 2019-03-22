@@ -1,0 +1,6 @@
+<map id="Quadrature" name="Quadrature">
+<area shape="rect" id="node2" href="$classLineQuadrature.html" title="Quadrature implementation for order = 2 (center of edges) " alt="" coords="5,80,116,107"/>
+<area shape="rect" id="node3" href="$classPointQuadrature.html" title="Quadrature implementation for order = 1 (center of gravity) " alt="" coords="140,80,256,107"/>
+<area shape="rect" id="node4" href="$classQuinticQuadrature.html" title="Quadrature implementation for order = 5. " alt="" coords="280,80,407,107"/>
+<area shape="rect" id="node5" href="$classThirdQuadrature.html" title="Quadrature implementation for order = 3. " alt="" coords="431,80,546,107"/>
+</map>

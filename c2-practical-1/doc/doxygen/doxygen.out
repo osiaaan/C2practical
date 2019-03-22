@@ -1,0 +1,14 @@
+error: Tag file `../../../dune-common.tag' does not exist or is not a file. Skipping it...
+error: Tag file `../../../dune-grid.tag' does not exist or is not a file. Skipping it...
+/home/masdoc/Downloads/C2/c2-practical-1/src/problem/problem6.hh:165: warning: end of file while inside a group
+
+/home/masdoc/Downloads/C2/c2-practical-1/src/problem/problem4.hh:161: warning: Found unknown command `\H'
+/home/masdoc/Downloads/C2/c2-practical-1/src/problem/problem4.hh:161: warning: Found unknown command `\H'
+/home/masdoc/Downloads/C2/c2-practical-1/src/problem/problem4.hh:161: warning: Found unknown command `\H'
+/home/masdoc/Downloads/C2/c2-practical-1/src/problem/problem4.hh:161: warning: Found unknown command `\H'
+/home/masdoc/Downloads/C2/c2-practical-1/src/problem/problem4.hh:161: warning: Found unknown command `\H'
+/home/masdoc/Downloads/C2/c2-practical-1/src/common/grid.hh:131: warning: argument 'enPtr' of command @param is not found in the argument list of GRID::Element< GridImp >::update(const EntityType &entity)
+/home/masdoc/Downloads/C2/c2-practical-1/src/common/grid.hh:134: warning: The following parameters of GRID::Element::update(const EntityType &entity) are not documented:
+  parameter 'entity'
+/home/masdoc/Downloads/C2/c2-practical-1/src/problem/problem4.hh:161: warning: Found unknown command `\H'
+/home/masdoc/Downloads/C2/c2-practical-1/src/problem/problem4.hh:161: warning: Found unknown command `\H'

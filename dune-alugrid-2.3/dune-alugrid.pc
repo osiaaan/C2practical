@@ -1,0 +1,15 @@
+prefix=/home/masdoc/Documents/c2/C2
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+CXX=g++ -std=c++11
+CC=gcc
+DEPENDENCIES= dune-grid >= 2.3 
+
+Name: dune-alugrid
+Version: 2.3
+Description: DUNE Adaptive, Load-balanced, and Unstructured Grid Module
+URL: http://aam.mathematik.uni-freiburg.de/IAM/Research/alugrid/
+Requires: ${DEPENDENCIES}
+Libs: -L${libdir}
+Cflags: -I${includedir}

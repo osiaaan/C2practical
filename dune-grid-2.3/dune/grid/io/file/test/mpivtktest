@@ -1,0 +1,4 @@
+#!/bin/sh
+# dune/grid/io/file/test/mpivtktest.  Generated from mpivtktest.in by configure.
+#exec mpirun -np 2 ./vtktest
+exit 77

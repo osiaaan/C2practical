@@ -1,0 +1,38 @@
+make clean
+make CXXFLAGS="-O3 -DLINEAR=1" laplace
+./laplace ../problem/cube01.dgf  8 0 >& result_linear0.out
+make clean
+
+make CXXFLAGS="-O3 -DQUADRATIC=1" laplace
+./laplace ../problem/cube01.dgf  8 0 >& result_quad0.out
+make clean
+
+make CXXFLAGS="-O3 -DCR=1" laplace
+./laplace ../problem/cube01.dgf  8 0 >& result_cr0.out
+make clean
+
+make CXXFLAGS="-O3 -DLINEAR=1" laplace
+./laplace ../problem/cube02.dgf  8 1 >& result_linear1.out
+make clean
+
+make CXXFLAGS="-O3 -DQUADRATIC=1" laplace
+./laplace ../problem/cube02.dgf  8 1 >& result_quad1.out
+make clean
+
+make CXXFLAGS="-O3 -DCR=1" laplace
+./laplace ../problem/cube02.dgf  8 1 >& result_cr1.out
+make clean
+
+make CXXFLAGS="-O3 -DLINEAR=1" laplace
+./laplace ../problem/cube.dgf  8 2 >& result_linear2.out
+make clean
+
+make CXXFLAGS="-O3 -DQUADRATIC=1" laplace
+./laplace ../problem/cube.dgf  8 2 >& result_quad2.out
+make clean
+
+make CXXFLAGS="-O3 -DCR=1" laplace
+./laplace ../problem/cube.dgf  8 2 >& result_cr2.out
+
+# need to delete some lines at the top of the output files before plotting
+# gnuplot plots.gnu

@@ -1,0 +1,28 @@
+libdunealugrid_la-topology.lo: ../dune/alugrid/3d/topology.cc \
+ /usr/include/stdc-predef.h ../dune/alugrid/3d/topology.hh \
+ ../dune/alugrid/common/alugrid_assert.hh /usr/include/c++/5/cassert \
+ /usr/include/assert.h /usr/include/features.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs-64.h
+
+/usr/include/stdc-predef.h:
+
+../dune/alugrid/3d/topology.hh:
+
+../dune/alugrid/common/alugrid_assert.hh:
+
+/usr/include/c++/5/cassert:
+
+/usr/include/assert.h:
+
+/usr/include/features.h:
+
+/usr/include/x86_64-linux-gnu/sys/cdefs.h:
+
+/usr/include/x86_64-linux-gnu/bits/wordsize.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:

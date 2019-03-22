@@ -1,0 +1,15 @@
+prefix=/home/masdoc/Documents/c2/C2
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+CXX=g++ -std=c++11
+CC=gcc
+DEPENDENCIES= dune-common >= 2.3  dune-geometry >= 2.3 
+
+Name: dune-grid
+Version: 2.3
+Description: Dune (Distributed and Unified Numerics Environment) grid module
+URL: http://dune-project.org/
+Requires: ${DEPENDENCIES}
+Libs: -L${libdir} -ldunegrid
+Cflags: -I${includedir}

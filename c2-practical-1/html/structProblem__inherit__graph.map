@@ -1,0 +1,18 @@
+<map id="Problem" name="Problem">
+<area shape="rect" id="node2" href="$classProblem1.html" title="Problem1" alt="" coords="167,5,244,32"/>
+<area shape="rect" id="node3" href="$classProblem2.html" title="Problem2" alt="" coords="167,56,244,83"/>
+<area shape="rect" id="node4" href="$classProblem2019__Ass1__1.html" title="Problem2019_Ass1_1" alt="" coords="131,107,280,133"/>
+<area shape="rect" id="node5" href="$classProblem2019__Ass1__2__3.html" title="Problem2019_Ass1_2_3" alt="" coords="124,157,287,184"/>
+<area shape="rect" id="node6" href="$classProblem2019__Ass1__4.html" title="Linear Problem for Interpolation. " alt="" coords="131,208,280,235"/>
+<area shape="rect" id="node7" href="$classProblem2019__Ass1__5.html" title="H^2^1 Problem for Interpolation. " alt="" coords="131,259,280,285"/>
+<area shape="rect" id="node8" href="$classProblem2019__Ass2__1.html" title="C0 problem. " alt="" coords="131,309,280,336"/>
+<area shape="rect" id="node9" href="$classProblem2019__Ass2__2.html" title="Problem2019_Ass2_2" alt="" coords="131,360,280,387"/>
+<area shape="rect" id="node10" href="$classProblem2019__Ass2__3.html" title="Problem2019_Ass2_3" alt="" coords="131,411,280,437"/>
+<area shape="rect" id="node11" href="$classProblem2__1.html" title="Problem2_1" alt="" coords="160,461,251,488"/>
+<area shape="rect" id="node12" href="$classProblem3.html" title="Problem3" alt="" coords="167,512,244,539"/>
+<area shape="rect" id="node13" href="$classProblem4.html" title="Problem4" alt="" coords="167,563,244,589"/>
+<area shape="rect" id="node14" href="$classProblem5.html" title="Problem5" alt="" coords="167,613,244,640"/>
+<area shape="rect" id="node15" href="$classProblemC1.html" title="C0 problem. " alt="" coords="162,664,249,691"/>
+<area shape="rect" id="node16" href="$classProblemSin.html" title="Sinus Problem for Interpolation. " alt="" coords="161,715,250,741"/>
+<area shape="rect" id="node17" href="$classProblemSqrt.html" title="Sqrt Problem for Interpolation. " alt="" coords="158,765,253,792"/>
+</map>

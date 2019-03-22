@@ -1,0 +1,219 @@
+
+/** \mainpage C2-practical
+
+<!---------------------------------------------->
+\section intro Introduction
+<!---------------------------------------------->
+
+Welcome to the %C2 practicals documentation pages. This documentation has been
+generated using Doxygen, a free source code documentation system for
+documenting C/C++ code.
+
+The software is based on the DUNE software package
+(http://www.dune-project.org/). A documentation based on the 2.0 release
+used in this module can be found here
+(http://www.dune-project.org/doc-2.0/doxygen/html/); note that you will
+probably not really need to look at the dune docu... You might want to
+have a look at the documentation for the Dune::FieldVector class which
+provides quite a lot of methods for handling fixed size vectors - the
+GlobalCoordinate and LocalCoordinate are just typedefs of 
+Dune::FieldVector<double,2>
+(http://www.dune-project.org/doc-2.0/doxygen/html/classDune_1_1FieldVector.html).
+
+A module demonstrating the implementation
+of numerical schemes using DUNE can be found on the DUNE-FEM homepage
+where an extensive howto is also available
+(http://dune.mathematik.uni-freiburg.de). 
+
+DUNE is implemented using C++ and runs under Unix. An introduction to C++
+is for example available under
+http://www.cplusplus.com/doc/tutorial .
+A short description of the most important Unix commands is for example
+available under
+http://info.ee.surrey.ac.uk/Teaching/Unix .
+
+
+In each week the code is extended to include new features. To this end,
+patches are applied in each week. At the beginning only \t src/1 contains any
+code, for week 2 a patch \t src2.patch is supplied which adds code to
+\t src/2. Here both a possible solution to the exercise from week 1 is
+supplied as well as some code as a starting point for the exercises in week
+2. In week 3 a patch \t src3.patch is supplied containing again the
+solution for the week 2 practical and new code to get you started in week
+3. 
+And so on...
+
+The patch file has to be downloaded from the module web page and can be applied by calling
+@code 
+  sh updatePractical.sh path nr
+@endcode
+whereby \c nr is the number of the exercise. This shell script has to be
+called from the main directory \c C2-practical and the supplied patch file
+has to be copied into the path supplied as first agument to the script. So
+for example if for the second week the patch file \c src2.patch is copied
+to the main directory \c C2-practical then the correct command for applying
+the patch would be
+@code 
+  sh updatePractical.sh . 2
+@endcode
+After the patch is applied also the documentation is update so that you 
+need to reload this information page. Most code is added to \c src/nr 
+but some is also added to \c src/common and \c src/problem.
+
+As mentioned, each patch includes the solution to the exercise from the 
+previous week. By calling
+@code
+  kdiff3 file1 file2
+@endcode
+you can compare your solution (in \c file1) with our solution (\c file2). 
+For example, after applying \c src2.patch you might want to go to
+\c src/2 and call
+@code
+  kdiff3 exercise1d.cc ../1
+@endcode
+Anytime you think that you have found a better solution or that there is a
+mistake in ours, please let us know!
+
+With
+@code
+grep -Hni Exercise *
+@endcode
+called in the directory of this weeks exercise you can find the places
+where you should add code to the program. Remove the lines with 
+@code
+EXERCISE("some message");
+@endcode
+so that your program output isn't poluted so much.
+
+A short overview of the exercises is given \ref concept "here". 
+A good way of finding documentation for the different parts of the code
+is to start from from the page \ref modules which gives
+you access to the documentation by category. Recall that each week new 
+material is added to the documentation which eventually requires to 
+reload the page. At first it is quite empty but wait and see...
+
+<!---------------------------------------------->
+\page concept Introduction to the C2 practical session package
+<!---------------------------------------------->
+
+
+<!---------------------------------------------->
+\section problem Problem description
+<!---------------------------------------------->
+
+The dune-praktikum module is based on the dune-grid interface library
+providing a simplified interface for use in the practical exercises 
+to the partial differential equations lectures. 
+
+The problem considered here is the linear elliptic equation: 
+\f{eqnarray*} 
+ -\triangle u + \lambda u &=& f \quad \mbox{ in } \Omega, \\
+                        u &=& g \quad \mbox{ on } \partial \Omega_D, \\
+        \nabla u\cdot n &=& 0 \quad \mbox{ on } \partial \Omega_N. 
+\f}
+Whereby so far only Dirichlet or Neumann boundary data can be used.
+
+The problem is solved on unstructured locally adapted triangular grids 
+in 2d using linear and quadratic finite elements. 
+
+<!---------------------------------------------->
+\section Exercises Exercises
+<!---------------------------------------------->
+
+The implementation of the scheme is divided into 6 part, starting in the 
+second week:
+
+  -# We store a piecewise linear representation of a smooth function on an unstructured grid and visualize the result. 
+     Furthermore we compute the area of the computational domain. Both tasks require the computation 
+     of the area and barycenter of each element in the grid. This exercise is intended
+     to get to know the grid interface classes. 
+  -# We study local adaptivity by simply refining some elements in the grid and looking
+     at the resulting grid. \n
+     \b Assignment 1: We move on to piecewise linear functions and compute error and numerical order of convergence for 
+     the interpolation of functions with different smoothness properties. This will be the first practical assignment
+     for the module. 
+  -# We study the l2-projection of a smooth function. This requires to setup the mass matrix and uses a sparse 
+     matrix and an iterative solver. We will also use an interface to describe discrete
+     functions. It is sufficiently generic to write code which will work also for higher
+     space dimensions. \n
+     \b Assignment 2: Based on the solution to this problem the second assignment will be to add 
+     the stiffness matrix and boundary treatment so that we can solve the elliptic problem described above.
+  -# We look at nothing new in this week but use the time to work on the second assignment.
+  -# Now that we have finished the linear finite element discretization of the elliptic problem, we add quadratic 
+     finite elements. We then can compare the performance of the linear and quadratic ansatz. 
+     We also study an important standard test case for the laplace equation.
+  -# Based on an a-posteriori error estimator, we are going to implement an adaptive scheme.
+
+<!---------------------------------------------->
+\section Problem Interface class for problem
+<!---------------------------------------------->
+
+The problem data \f$( f, g, \lambda )\f$ is prescribed using a virtual base
+class Problem, i.e., we use static polymorphism.
+Different problems are considered with different smoothness
+properties. Also the reentrant corner problem and the problem with
+a slit are implemented. 
+
+<!---------------------------------------------->
+\section Grid Interface classes for the grid
+<!---------------------------------------------->
+
+The \b DUNE grid interface has been simplified for the use in these
+practials. These classes are folded into the namespace \b GRID in
+order to avoid conflicts with the classes from \b DUNE. 
+The grid is presented by the class GRID::Grid.  
+The Elements (entities with codimension 0) 
+are described by the class GRID::Element. The Intersection is described
+by the GRID::Intersection class. All Iterators follow the standard
+iterator interface described by GRID::Iterator.  
+
+Refinement and coarsening of grids 
+is only possible without data preservation, i.e. current data 
+cannot be transfered to new grids. All data information is dropped  
+after adaptation of grids. For marking elements the Grid provides a
+method GRID::Grid::mark. Adaptation is triggered by the method 
+GRID::Grid::adapt.
+Furthermore, grids can be refined globally by using the method 
+GRID::Grid::globalRefine. 
+
+<!---------------------------------------------->
+\section DF Interface classes discrete functions, vectors and matrices
+<!---------------------------------------------->
+
+A DiscreteFunction is the combination of the DoF vector with a certain
+base function set. The DoF vector realized by the \ref Vector class and
+the base functions set is described by the BaseFunctionSet class. The 
+base function set is provided as template argument for the DiscreteFunction
+class, i.e., we use static polymorphism here.
+
+A Matrix providing a Compressed-Row-Storage (CRS) 
+is implemented in the class SparseMatrix.
+
+<!---------------------------------------------->
+\section solver Linear Solver 
+<!---------------------------------------------->
+
+So far only the conjugate gradient method is available, see \ref cghs. 
+
+<!---------------------------------------------->
+\section QuadSec Quadratures
+<!---------------------------------------------->
+
+Quadratures are represented by a simple Quadrature interface. 
+It is realized as a point storage filled by a derived class 
+using the \ref Quadrature::addQuadraturePoint method. 
+
+<!---------------------------------------------->
+\section IOSec Output
+<!---------------------------------------------->
+
+Simulation data can be written to disk in VTK, Paraview
+(http://www.paraview.org/) format using the available output routines 
+for grids, \ref output , and for data. The class Output provides methods 
+to write cell data, point data and a general DiscreteFunction. Note that 
+in any case only a piecewise linear representation is available.
+
+**/
+
+/** \page modules Modules
+*/

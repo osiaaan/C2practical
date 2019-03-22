@@ -1,0 +1,11 @@
+\form#0:$ \lambda $
+\form#1:$ x $
+\form#2:$ x = F(\lambda) $
+\form#3:$ \nabla \hat{\varphi}$
+\form#4:$\nabla \varphi = J_{E}^{-T} \nabla \hat{\varphi}$
+\form#5:$J_E = DF_E$
+\form#6:$|det(J_{E})|$
+\form#7:$ b $
+\form#8:$ w = A \, v $
+\form#9:$v$
+\form#10:$w$
