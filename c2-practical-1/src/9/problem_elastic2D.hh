@@ -156,16 +156,16 @@ class ProblemMixed : public Problem {
     }
     virtual bool isDirichlet(const GlobalCoordType &x) const override
     {
-      // neither the right nor the lower edge is Dirichlet
+      // neither the left nor the lower edge is Dirichlet
       // but both of the others are
-      return true;//(x[0] > 1e-12 && x[1] > 1e-12);
+      return (x[0] > 1e-12 && x[1] > 1e-12);
     }
 
     GlobalCoordType h(const GlobalCoordType &x) const override
         {
           JacobianType grad = du(x);
           GlobalCoordType ret(0);
-          if (x[0] < 1e-12) {     // right boundary n=(-1,0)
+          if (x[0] < 1e-12) {     // left boundary n=(-1,0)
             ret[0] = -grad[0][0];
             ret[1] = -grad[1][0];
             return ret;

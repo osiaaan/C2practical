@@ -137,7 +137,7 @@ void solve(const GridType& grid,
     /////////////////////////////////////////
     //  assemble (skeleton) and boundary terms
     /////////////////////////////////////////
-    #if 0
+
     {
       // iterate over all 'intersection'
       const IntersectionIteratorType enditi= element.iend();
@@ -186,7 +186,7 @@ void solve(const GridType& grid,
         }
       }
     } // end of skeleton assembly
-#endif
+
 
     // add to right hand side
     for (int k=0; k<locNrDof; ++k)

@@ -1,15 +1,15 @@
 DGF parser started
-Automatic grid generation
-Using INTERVAL block
+Using VERTEX block
+Using SIMPLEX block
 Step 1 finished: 
                  2d
-                 102 verticies
-                 100 elements
+                 4 verticies
+                 2 elements
 Using BOUNDARYDOMAIN block
 Step 2 finished: 
                  0 bnd-segs read in BoundarySegment block
-                 102 bnd-segs in grid
+                 4 bnd-segs in grid
                  0 bnd-segs in a boundary domain
-                 102 bnd-seg assigned default value
+                 4 bnd-seg assigned default value
                  0 bnd-segs have not been assigned an id!
 Successful
