@@ -430,6 +430,8 @@ int main(int argc, char ** argv)
             break;
    case 2: problem = new Problem2a();
            break;
+   case 3: problem = new Problem2b();
+           break;
    default: std::cerr << "Wrong problem number " << prob << std::endl;
             return 1;
   }
