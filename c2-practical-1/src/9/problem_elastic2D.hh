@@ -186,6 +186,152 @@ class ProblemMixed : public Problem {
     //private:
     //double factor_;
 };
+
+class Problem2a : public Problem {
+  public:
+    Problem2a()
+    : Problem(10., 100.) {};
+    virtual ~Problem2a() {}
+
+    GlobalCoordType u(const GlobalCoordType &x) const
+    {
+      GlobalCoordType yiw(0);
+      yiw[0] = 0.0;
+      yiw[1] = x[0]*x[0]*x[1]*x[1]*(1.-x[0])*(1.-x[0])*(1.-x[1])*(1.-x[1]);
+      return yiw;
+    }
+
+    JacobianType du(const GlobalCoordType &x) const
+    {
+      JacobianType yo(0);
+
+      yo[0][0] = 0;
+      yo[0][1] = 0;
+      yo[1][0] = x[1]*x[1]*(1-x[1])*(1-x[1])*2*x[0]*(2*x[0]*x[0]-3*x[0]+1);
+      yo[1][1] = x[0]*x[0]*(1-x[0])*(1-x[0])*2*x[1]*(2*x[1]*x[1]-3*x[1]+1);;
+      return yo;
+    }
+
+    // set to -laplace u
+    GlobalCoordType f(const GlobalCoordType &x) const
+    {
+      GlobalCoordType yo(0);
+
+      yo[0] = -400*x[1]*(2*x[1]*x[1] -3*x[1] +1)*x[0]*(2*x[0]*x[0] -3*x[0] +1) -
+                40*x[1]*(2*x[1]*x[1] -3*x[1] +1)*x[0]*(2*x[0]*x[0] -3*x[0] +1);
+      yo[1] = -10*x[1]*x[1]*(1.-x[1])*(1.-x[1]) * 2*(6*x[0]*x[0] -6*x[0] + 1) -
+                (2*10 + 100) * x[0]*x[0]*(1.-x[0])*(1.-x[0]) * 2*(6*x[1]*x[1] -6*x[1] + 1);
+      return yo;
+    }
+    bool useDirichlet() const override
+    {
+      return true;
+    }
+    virtual bool isDirichlet(const GlobalCoordType &x) const override
+    {
+      // neither the left nor the lower edge is Dirichlet
+      // but both of the others are
+      return true;//(x[0] > 1e-12 && x[1] > 1e-12);
+    }
+
+    GlobalCoordType h(const GlobalCoordType &x) const override
+        {
+          JacobianType grad = du(x);
+          GlobalCoordType ret(0);
+          if (x[0] < 1e-12) {     // left boundary n=(-1,0)
+            ret[0] = -grad[0][0];
+            ret[1] = -grad[1][0];
+            return ret;
+          }
+          else if (x[1] < 1e-12) { // lower boundary n=(0,-1)
+            ret[0] = -grad[0][1];
+            ret[1] = -grad[1][1];
+            return ret;
+          }
+          else                   // should never get here!
+            assert(0);
+        }
+
+    virtual const char* gridName() const
+    {
+      return "../problem/cube01.dgf";
+    }
+    //private:
+    //double factor_;
+};
+
+class Problem2b : public Problem {
+  public:
+    Problem2a()
+    : Problem(10., 100.) {};
+    virtual ~Problem2a() {}
+
+    GlobalCoordType u(const GlobalCoordType &x) const
+    {
+      GlobalCoordType yiw(0);
+      yiw[0] = 0.0;
+      yiw[1] = x[0]*x[0]*x[1]*x[1]*(1.-x[0])*(1.-x[0])*(1.-x[1])*(1.-x[1]);
+      return yiw;
+    }
+
+    JacobianType du(const GlobalCoordType &x) const
+    {
+      JacobianType yo(0);
+
+      yo[0][0] = 0;
+      yo[0][1] = 0;
+      yo[1][0] = x[1]*x[1]*(1-x[1])*(1-x[1])*2*x[0]*(2*x[0]*x[0]-3*x[0]+1);
+      yo[1][1] = x[0]*x[0]*(1-x[0])*(1-x[0])*2*x[1]*(2*x[1]*x[1]-3*x[1]+1);;
+      return yo;
+    }
+
+    // set to -laplace u
+    GlobalCoordType f(const GlobalCoordType &x) const
+    {
+      GlobalCoordType yo(0);
+
+      yo[0] = -400*x[1]*(2*x[1]*x[1] -3*x[1] +1)*x[0]*(2*x[0]*x[0] -3*x[0] +1) -
+                40*x[1]*(2*x[1]*x[1] -3*x[1] +1)*x[0]*(2*x[0]*x[0] -3*x[0] +1);
+      yo[1] = -10*x[1]*x[1]*(1.-x[1])*(1.-x[1]) * 2*(6*x[0]*x[0] -6*x[0] + 1) -
+                (2*10 + 100) * x[0]*x[0]*(1.-x[0])*(1.-x[0]) * 2*(6*x[1]*x[1] -6*x[1] + 1);
+      return yo;
+    }
+    bool useDirichlet() const override
+    {
+      return true;
+    }
+    virtual bool isDirichlet(const GlobalCoordType &x) const override
+    {
+      // neither the left nor the lower edge is Dirichlet
+      // but both of the others are
+      return true;//(x[0] > 1e-12 && x[1] > 1e-12);
+    }
+
+    GlobalCoordType h(const GlobalCoordType &x) const override
+        {
+          JacobianType grad = du(x);
+          GlobalCoordType ret(0);
+          if (x[0] < 1e-12) {     // left boundary n=(-1,0)
+            ret[0] = -grad[0][0];
+            ret[1] = -grad[1][0];
+            return ret;
+          }
+          else if (x[1] < 1e-12) { // lower boundary n=(0,-1)
+            ret[0] = -grad[0][1];
+            ret[1] = -grad[1][1];
+            return ret;
+          }
+          else                   // should never get here!
+            assert(0);
+        }
+
+    virtual const char* gridName() const
+    {
+      return "../problem/cube01.dgf";
+    }
+    //private:
+    //double factor_;
+};
 /**
   @}
  */

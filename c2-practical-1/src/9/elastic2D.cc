@@ -123,12 +123,19 @@ void solve(const GridType& grid,
 
         for (int k=0; k<locNrDof; ++k)
         {
-         for (int l=0; l<locNrDof; ++l)
+         for (int j=0; j<locNrDof; ++j)
          {
-           const double v = (gradphi[k] * gradphi[l]);
-           matrix[k][l][0][0] += v*weight;
-           matrix[k][l][1][1] += v*weight;
-           assert( matrix[k][l] == matrix[k][l] );
+           const double v_00 = (2.0*problem.get_mu()*gradphi[k][0] + problem.get_lambda()*gradphi[k][0])*gradphi[j][0] +
+                                problem.get_mu()*gradphi[k][1]*gradphi[j][1];
+           const double v_01 = problem.get_mu()*gradphi[k][1]*gradphi[j][0] + problem.get_lambda()*gradphi[k][0]*gradphi[j][1];
+           const double v_10 = problem.get_mu()*gradphi[k][0]*gradphi[j][1] + problem.get_lambda()*gradphi[k][1]*gradphi[j][0];
+           const double v_11 = (2.0*problem.get_mu()*gradphi[k][1] + problem.get_lambda()*gradphi[k][1])*gradphi[j][1] +
+                                problem.get_mu()*gradphi[k][0]*gradphi[j][0];
+           matrix[k][j][0][0] += v_00*weight;
+           matrix[k][j][0][1] += v_01*weight;
+           matrix[k][j][1][0] += v_10*weight;
+           matrix[k][j][1][1] += v_11*weight;
+           assert( matrix[k][j] == matrix[k][j] );
          }
        }
       } // end of element quadrature loop
@@ -421,8 +428,10 @@ int main(int argc, char ** argv)
   {
     case 1: problem = new ProblemMixed();
             break;
-    default: std::cerr << "Wrong problem number " << prob << std::endl;
-             return 1;
+   case 2: problem = new Problem2a();
+           break;
+   default: std::cerr << "Wrong problem number " << prob << std::endl;
+            return 1;
   }
 
   if (gridname == "default" || gridname == "Default")
