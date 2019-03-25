@@ -189,6 +189,38 @@ void solve(const GridType& grid,
             const GlobalCoordType xqpOut = intersection.geometryInNeighbor( x[qp] );
             double weight = w[qp] * intersection_integrationelement;
             // TODO: add terms for CR penalty
+
+
+            double IN[locNrDof];
+            double OUT[locNrDof];
+            for (int k=0; k<locNrDof; ++k)
+            {
+              IN[k] = uh.evaluate( element, k, xqpIn );
+              OUT[k] = uh.evaluate( element, k, xqpOut );
+            }
+
+            for (int k=0; k<locNrDof; ++k)
+            {
+             for (int l=0; l<locNrDof; ++l)
+             {
+               double phi_k = OUT[k] - IN[k];
+               double phi_l = OUT[l] - IN[l];
+               double constant = 2*problem.get_mu()*problem.get_beta();
+               constant = constant/h;
+               const double v_00 = constant * phi_k * phi_l * normal[0] * normal[0];
+               const double v_01 = constant * phi_k * phi_l * normal[0] * normal[1];
+               const double v_10 = constant * phi_k * phi_l * normal[1] * normal[0];
+               const double v_11 = constant * phi_k * phi_l * normal[1] * normal[1];
+
+               matrix[k][l][0][0] += v_00*weight;
+               matrix[k][l][0][1] += v_01*weight;
+               matrix[k][l][1][0] += v_10*weight;
+               matrix[k][l][1][1] += v_11*weight;
+
+               assert( matrix[k][l] == matrix[k][l] );
+             }
+           }
+
           }
         }
       }
@@ -280,11 +312,13 @@ void error(const GridType& grid,
            const Problem& problem,
            const DiscreteFunctionType &uh,
            double &l2error,
-           double &h1error)
+           double &h1error,
+           double &hEerror)
 
 {
   l2error = 0.;
   h1error = 0.;
+  hEerror = 0.;
 
   // create quadrature
   QuinticQuadrature quad;
@@ -299,6 +333,7 @@ void error(const GridType& grid,
 
     double locl2error=0;
     double loch1error=0.;
+    double locEerror=0.;
 
     // for all quadrature points evaluate integrand
     for (int qp=0; qp<quad.nop(); ++qp)
@@ -329,14 +364,20 @@ void error(const GridType& grid,
       loch1error += quad.weight(qp) * element.integrationElement()
                     * ( du[0][0]*du[0][0] + du[0][1]*du[0][1]
                       + du[1][0]*du[1][0] + du[1][1]*du[1][1] ) ;
+
+      locEerror += 2*problem.get_mu()*loch1error +
+                   problem.get_lambda()*quad.weight(qp)*element.integrationElement() *
+                   ( du[0][0] + du[1][1] )* ( du[0][0] + du[1][1] );
     }
 
     // add local error to global error
     l2error += locl2error;
     h1error += loch1error;
+    hEerror += locEerror;
   }
   l2error = sqrt(l2error);
   h1error = sqrt(h1error);
+  hEerror = sqrt(hEerror);
 }
 
 void compute(GridType& grid,
@@ -346,8 +387,10 @@ void compute(GridType& grid,
   const int dimension = grid.dimension;
   double l2error[refines];
   double h1error[refines];
+  double hEerror[refines];
   double eocl2[refines];
   double eoch1[refines];
+  double eochE[refines];
 
   double hold=1./sqrt(grid.size(dimension));
 
@@ -363,7 +406,7 @@ void compute(GridType& grid,
     solve(grid,problem,uh);
 
     // compute the approximation error
-    error( grid, problem, uh, l2error[n], h1error[n] );
+    error( grid, problem, uh, l2error[n], h1error[n], hEerror[n] );
 
     if (n>0)
     {
@@ -373,11 +416,15 @@ void compute(GridType& grid,
 
       eoch1[n]=(log(h1error[n-1])-log(h1error[n]))/
                 log(hfraction);
+
+      eochE[n]=(log(hEerror[n-1])-log(hEerror[n]))/
+                log(hfraction);
     }
     else
     {
       eocl2[0]=-1;
       eoch1[0]=-1;
+      eochE[0]=-1;
     }
 
     cout << uh.size() << "\t  "
@@ -386,6 +433,8 @@ void compute(GridType& grid,
          << l2error[n] << " \t " << eocl2[n]
          << " \t\t "
          << h1error[n] << " \t " << eoch1[n]
+         << " \t\t "
+         << hEerror[n] << " \t " << eochE[n]
          << " \t\t "
          << endl;
 
@@ -431,6 +480,16 @@ int main(int argc, char ** argv)
    case 2: problem = new Problem2a();
            break;
    case 3: problem = new Problem2b();
+           break;
+   case 4: problem = new Problem31();
+           break;
+   case 5: problem = new Problem32();
+           break;
+   case 6: problem = new Problem41();
+           break;
+   case 7: problem = new Problem42();
+           break;
+   case 8: problem = new Problem5();
            break;
    default: std::cerr << "Wrong problem number " << prob << std::endl;
             return 1;

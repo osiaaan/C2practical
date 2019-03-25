@@ -1,0 +1,12 @@
+GridParameterBlock: Parameter 'tolerance' not specified, defaulting to `1e-08'!
+
+Created serial ALUGrid<2,2,simplex,conforming> from macro grid file '../problem/cube01.dgf.
+
+cg iterations: 26
+162	  0.2  		 7.20113e-05 	 -1 		 0.00183023 	 -1 		 0.0171091 	 -1 		 
+cg iterations: 97
+578	  0.111111  		 8.35932e-06 	 3.66365 		 0.000406147 	 2.56128 		 0.00387685 	 2.52573 		 
+cg iterations: 198
+2178	  0.0588235  		 1.02688e-06 	 3.297 		 9.67824e-05 	 2.25515 		 0.000947466 	 2.21543 		 
+cg iterations: 394
+8450	  0.030303  		 1.27473e-07 	 3.14547 		 2.37724e-05 	 2.11661 		 0.000235259 	 2.10028 		 

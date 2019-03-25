@@ -1,0 +1,12 @@
+GridParameterBlock: Parameter 'tolerance' not specified, defaulting to `1e-08'!
+
+Created serial ALUGrid<2,2,simplex,conforming> from macro grid file '../problem/beam.dgf.
+
+cg iterations: 19
+2010	  0.031544  		 2.24916e-08 	 -1 		 1.69886e-05 	 -1 		 0.000191407 	 -1 		 
+cg iterations: 29
+7218	  0.0166459  		 5.33739e-09 	 2.25024 		 8.19944e-06 	 1.13963 		 9.34145e-05 	 1.12223 		 
+cg iterations: 54
+27234	  0.00856957  		 1.30016e-09 	 2.12706 		 4.03475e-06 	 1.06804 		 4.61633e-05 	 1.06163 		 
+cg iterations: 102
+105666	  0.00435058  		 3.21144e-10 	 2.06275 		 2.00301e-06 	 1.03302 		 2.29572e-05 	 1.03045 		 

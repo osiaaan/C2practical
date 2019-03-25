@@ -10,10 +10,11 @@
 typedef Dune::FieldMatrix<double,2,2> JacobianType;
 struct Problem
 {
-    Problem (double mu, double lam)
+    Problem (double mu, double lam, double beta)
     {
       Lame_mu = mu;
       Lame_lambda = lam;
+      beta_ = beta;
     }
 
     /** \brief destructor */
@@ -90,6 +91,11 @@ struct Problem
       return Lame_mu;
     }
 
+    double get_beta() const
+    {
+      return beta_;
+    }
+
     /** \brief return Lame constant lambda
         \return \f$ \lambda \f$
     */
@@ -105,13 +111,14 @@ struct Problem
 
   protected:
     double Lame_mu;
+    double beta_;
     double Lame_lambda;
 };
 
 class ProblemMixed : public Problem {
   public:
     ProblemMixed()
-    : Problem(1., 1.) {};
+    : Problem(1., 1., 1.) {};
     virtual ~ProblemMixed() {}
 
     GlobalCoordType u(const GlobalCoordType &x) const
@@ -190,7 +197,7 @@ class ProblemMixed : public Problem {
 class Problem2a : public Problem {
   public:
     Problem2a()
-    : Problem(10., 100.) {};
+    : Problem(10., 100., 0.) {};
     virtual ~Problem2a() {}
 
     GlobalCoordType u(const GlobalCoordType &x) const
@@ -263,7 +270,7 @@ class Problem2a : public Problem {
 class Problem2b : public Problem {
   public:
     Problem2b()
-    : Problem(200., 10.) {};
+    : Problem(200., 10., 0.) {};
     virtual ~Problem2b() {}
 
     double const mu = 200.0;
@@ -338,19 +345,363 @@ class Problem2b : public Problem {
     //double factor_;
 };
 
-class Problem3 : public Problem {
+class Problem31 : public Problem {
   public:
-    Problem3()
-    : Problem(1., 1.) {};
-    virtual ~Problem3() {}
+    Problem31()
+    : Problem(1., 1., 0.) {}
+
+    virtual ~Problem31() {}
+
+    double h(const double &x) const
+    {
+      return x*x*(1-x)*(1-x);
+    }
+
+    double dh(const double &x) const
+    {
+      return 2*x*(1-x)*(1-x) - 2*x*x*(1-x);
+    }
+
+    double ddh(const double &x) const
+    {
+      return 2*(1-x)*(1-x) - 4*x*(1-x) - 4*x*(1-x) + 2*x*x;
+    }
+
+    double dddh(const double &x) const
+    {
+      return 12*(2*x-1);
+    }
+
+    GlobalCoordType u(const GlobalCoordType &x) const
+    {
+      GlobalCoordType u(0);
+      u[0] = -100*h(x[0])*dh(x[1]);
+      u[1] = 100*h(x[1])*dh(x[0]);
+      return u;
+    }
+
+    JacobianType du(const GlobalCoordType &x) const
+    {
+      JacobianType du(0);
+      du[0][0] = -100*dh(x[0])*dh(x[1]);
+      du[0][1] = -100*h(x[0])*ddh(x[1]);
+      du[1][0] = 100*h(x[1])*ddh(x[0]);
+      du[1][1] = 100*dh(x[1])*dh(x[0]);
+      return du;
+    }
+
+    // set to -laplace u
+    GlobalCoordType f(const GlobalCoordType &x) const
+    {
+      GlobalCoordType ret;
+      ret[0] = -100*Lame_mu*(-ddh(x[0])*dh(x[1])-h(x[0])*dddh(x[1]));
+      ret[1] = -100*Lame_mu*(ddh(x[1])*dh(x[0])+h(x[1])*dddh(x[0]));
+      return ret;
+    }
+
+    GlobalCoordType g(const GlobalCoordType &x) const
+    {
+      return u(x);
+    }
+
+    // double lambda() const
+    // {
+    //   return 0;
+    // }
+
+    bool useDirichlet() const override
+    {
+      return true;
+    }
+
+    virtual bool isDirichlet(const GlobalCoordType &x) const override
+    {
+      // neither the left nor the lower edge is Dirichlet
+      // but both of the others are
+      return true;
+    }
+
+
+    virtual const char* gridName() const
+    {
+      return "../problem/cube01.dgf";
+    }
+
+};
+
+class Problem32 : public Problem {
+  public:
+    Problem32()
+    : Problem(1., 1e8, 0.) {}
+
+    virtual ~Problem32() {}
+
+    double h(const double &x) const
+    {
+      return x*x*(1-x)*(1-x);
+    }
+
+    double dh(const double &x) const
+    {
+      return 2*x*(1-x)*(1-x) - 2*x*x*(1-x);
+    }
+
+    double ddh(const double &x) const
+    {
+      return 2*(1-x)*(1-x) - 4*x*(1-x) - 4*x*(1-x) + 2*x*x;
+    }
+
+    double dddh(const double &x) const
+    {
+      return 12*(2*x-1);
+    }
+
+    GlobalCoordType u(const GlobalCoordType &x) const
+    {
+      GlobalCoordType u(0);
+      u[0] = -100*h(x[0])*dh(x[1]);
+      u[1] = 100*h(x[1])*dh(x[0]);
+      return u;
+    }
+
+    JacobianType du(const GlobalCoordType &x) const
+    {
+      JacobianType du(0);
+      du[0][0] = -100*dh(x[0])*dh(x[1]);
+      du[0][1] = -100*h(x[0])*ddh(x[1]);
+      du[1][0] = 100*h(x[1])*ddh(x[0]);
+      du[1][1] = 100*dh(x[1])*dh(x[0]);
+      return du;
+    }
+
+    // set to -laplace u
+    GlobalCoordType f(const GlobalCoordType &x) const
+    {
+      GlobalCoordType ret;
+      ret[0] = -100*Lame_mu*(-ddh(x[0])*dh(x[1])-h(x[0])*dddh(x[1]));
+      ret[1] = -100*Lame_mu*(ddh(x[1])*dh(x[0])+h(x[1])*dddh(x[0]));
+      return ret;
+    }
+
+    GlobalCoordType g(const GlobalCoordType &x) const
+    {
+      return u(x);
+    }
+
+    // double lambda() const
+    // {
+    //   return 0;
+    // }
+
+    bool useDirichlet() const override
+    {
+      return true;
+    }
+
+    virtual bool isDirichlet(const GlobalCoordType &x) const override
+    {
+      // neither the left nor the lower edge is Dirichlet
+      // but both of the others are
+      return true;
+    }
+
+
+    virtual const char* gridName() const
+    {
+      return "../problem/cube01.dgf";
+    }
+
+};
+
+class Problem41 : public Problem {
+public:
+    Problem41()
+    : Problem(1., 1., 1.) {}
+
+    virtual ~Problem41() {}
+
+
+
+
+    double h(const double &x) const
+    {
+      return x*x*(1-x)*(1-x);
+    }
+
+    double dh(const double &x) const
+    {
+      return 2*x*(1-x)*(1-x) - 2*x*x*(1-x);
+    }
+
+    double ddh(const double &x) const
+    {
+      return 2*(1-x)*(1-x) - 4*x*(1-x) - 4*x*(1-x) + 2*x*x;
+    }
+
+    double dddh(const double &x) const
+    {
+      return 12*(2*x-1);
+    }
+
+    GlobalCoordType u(const GlobalCoordType &x) const
+    {
+      GlobalCoordType u(0);
+      u[0] = -100*h(x[0])*dh(x[1]);
+      u[1] = 100*h(x[1])*dh(x[0]);
+      return u;
+    }
+
+    JacobianType du(const GlobalCoordType &x) const
+    {
+      JacobianType du(0);
+      du[0][0] = -100*dh(x[0])*dh(x[1]);
+      du[0][1] = -100*h(x[0])*ddh(x[1]);
+      du[1][0] = 100*h(x[1])*ddh(x[0]);
+      du[1][1] = 100*dh(x[1])*dh(x[0]);
+      return du;
+    }
+
+    // set to -laplace u
+    GlobalCoordType f(const GlobalCoordType &x) const
+    {
+      GlobalCoordType ret;
+      ret[0] = -100*Lame_mu*(-ddh(x[0])*dh(x[1])-h(x[0])*dddh(x[1]));
+      ret[1] = -100*Lame_mu*(ddh(x[1])*dh(x[0])+h(x[1])*dddh(x[0]));
+      return ret;
+    }
+
+    GlobalCoordType g(const GlobalCoordType &x) const
+    {
+      return u(x);
+    }
+
+    // double lambda() const
+    // {
+    //   return 0;
+    // }
+
+    bool useDirichlet() const override
+    {
+      return true;
+    }
+
+    virtual bool isDirichlet(const GlobalCoordType &x) const override
+    {
+      // neither the left nor the lower edge is Dirichlet
+      // but both of the others are
+      return true;
+    }
+
+
+    virtual const char* gridName() const
+    {
+      return "../problem/cube01.dgf";
+    }
+
+};
+
+class Problem42 : public Problem {
+  public:
+    Problem42()
+    : Problem(1., 1., 0.0) {
+    }
+
+    virtual ~Problem42() {}
+
+    double get_beta() const
+    {
+      return 0.0;
+    }
+
+    double h(const double &x) const
+    {
+      return x*x*(1-x)*(1-x);
+    }
+
+    double dh(const double &x) const
+    {
+      return 2*x*(1-x)*(1-x) - 2*x*x*(1-x);
+    }
+
+    double ddh(const double &x) const
+    {
+      return 2*(1-x)*(1-x) - 4*x*(1-x) - 4*x*(1-x) + 2*x*x;
+    }
+
+    double dddh(const double &x) const
+    {
+      return 12*(2*x-1);
+    }
+
+    GlobalCoordType u(const GlobalCoordType &x) const
+    {
+      GlobalCoordType u(0);
+      u[0] = -100*h(x[0])*dh(x[1]);
+      u[1] = 100*h(x[1])*dh(x[0]);
+      return u;
+    }
+
+    JacobianType du(const GlobalCoordType &x) const
+    {
+      JacobianType du(0);
+      du[0][0] = -100*dh(x[0])*dh(x[1]);
+      du[0][1] = -100*h(x[0])*ddh(x[1]);
+      du[1][0] = 100*h(x[1])*ddh(x[0]);
+      du[1][1] = 100*dh(x[1])*dh(x[0]);
+      return du;
+    }
+
+    // set to -laplace u
+    GlobalCoordType f(const GlobalCoordType &x) const
+    {
+      GlobalCoordType ret;
+      ret[0] = -100*Lame_mu*(-ddh(x[0])*dh(x[1])-h(x[0])*dddh(x[1]));
+      ret[1] = -100*Lame_mu*(ddh(x[1])*dh(x[0])+h(x[1])*dddh(x[0]));
+      return ret;
+    }
+
+
+    GlobalCoordType g(const GlobalCoordType &x) const
+    {
+      return u(x);
+    }
+
+    // double lambda() const
+    // {
+    //   return 0;
+    // }
+
+    bool useDirichlet() const override
+    {
+      return true;
+    }
+
+    virtual bool isDirichlet(const GlobalCoordType &x) const override
+    {
+      // neither the left nor the lower edge is Dirichlet
+      // but both of the others are
+      return true;
+    }
+
+
+    virtual const char* gridName() const
+    {
+      return "../problem/cube01.dgf";
+    }
+
+};
+
+class Problem5 : public Problem {
+  public:
+    Problem5()
+    : Problem(10., 10., 0.) {};
+    virtual ~Problem5() {}
 
     GlobalCoordType u(const GlobalCoordType &x) const
     {
       GlobalCoordType yiw(0);
-      yiw[0] = 200 * x[0]*x[0]*(1-x[0])*(1-x[0]) *
-               x[1]*(1-x[1])*(2*x[1]-1);
-      yiw[0] = -200 * x[1]*x[1]*(1-x[1])*(1-x[1]) *
-               x[0]*(1-x[0])*(2*x[0]-1);
+      yiw[0] = 0.0;
+      yiw[1] = (x[0]*x[1])/10.0;
       return yiw;
     }
 
@@ -370,8 +721,8 @@ class Problem3 : public Problem {
     {
       GlobalCoordType yo(0);
 
-      yo[0] =  -(mu + lambda)/10.0;
-      yo[1] = 0.0;
+      yo[0] = 0.0;
+      yo[1] = 0.009;
       return yo;
     }
     bool useDirichlet() const override
@@ -382,30 +733,14 @@ class Problem3 : public Problem {
     {
       // neither the left nor the lower edge is Dirichlet
       // but both of the others are
-      return true;//(x[0] < 1e-12);
+      return (x[0] < 1e-12);
     }
 
     GlobalCoordType h(const GlobalCoordType &x) const override
         {
           JacobianType grad = du(x);
           GlobalCoordType ret(0);
-          if (1 - x[1] < 1e-12) {     // upper boundary n=(0,1)
-            ret[0] = mu*(grad[0][1] + grad[1][0]);
-            ret[1] = (2*mu + lambda)*grad[1][1] + lambda*grad[0][0];
-            return ret;
-          }
-          else if (1 - x[0] < 1e-12) { // right boundary n=(1,0)
-            ret[0] = (2*mu + lambda)*grad[0][0] + lambda*grad[1][1];
-            ret[1] = mu*(grad[0][1] + grad[1][0]);
-            return ret;
-          }
-          else if (x[1] < 1e-12) { // lower boundary n=(0,-1)
-            ret[0] = -mu*(grad[0][1] + grad[1][0]);
-            ret[1] = -(2*mu + lambda)*grad[1][1] - lambda*grad[0][0];
-            return ret;
-          }
-          else                   // should never get here!
-            assert(0);
+          return ret;
         }
 
     virtual const char* gridName() const
