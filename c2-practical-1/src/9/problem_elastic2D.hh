@@ -601,12 +601,99 @@ public:
 };
 
 class Problem42 : public Problem {
-  public:
+public:
     Problem42()
+    : Problem(1., 1e8, 1.) {}
+
+    virtual ~Problem42() {}
+
+
+
+
+    double h(const double &x) const
+    {
+      return x*x*(1-x)*(1-x);
+    }
+
+    double dh(const double &x) const
+    {
+      return 2*x*(1-x)*(1-x) - 2*x*x*(1-x);
+    }
+
+    double ddh(const double &x) const
+    {
+      return 2*(1-x)*(1-x) - 4*x*(1-x) - 4*x*(1-x) + 2*x*x;
+    }
+
+    double dddh(const double &x) const
+    {
+      return 12*(2*x-1);
+    }
+
+    GlobalCoordType u(const GlobalCoordType &x) const
+    {
+      GlobalCoordType u(0);
+      u[0] = -100*h(x[0])*dh(x[1]);
+      u[1] = 100*h(x[1])*dh(x[0]);
+      return u;
+    }
+
+    JacobianType du(const GlobalCoordType &x) const
+    {
+      JacobianType du(0);
+      du[0][0] = -100*dh(x[0])*dh(x[1]);
+      du[0][1] = -100*h(x[0])*ddh(x[1]);
+      du[1][0] = 100*h(x[1])*ddh(x[0]);
+      du[1][1] = 100*dh(x[1])*dh(x[0]);
+      return du;
+    }
+
+    // set to -laplace u
+    GlobalCoordType f(const GlobalCoordType &x) const
+    {
+      GlobalCoordType ret;
+      ret[0] = -100*Lame_mu*(-ddh(x[0])*dh(x[1])-h(x[0])*dddh(x[1]));
+      ret[1] = -100*Lame_mu*(ddh(x[1])*dh(x[0])+h(x[1])*dddh(x[0]));
+      return ret;
+    }
+
+    GlobalCoordType g(const GlobalCoordType &x) const
+    {
+      return u(x);
+    }
+
+    // double lambda() const
+    // {
+    //   return 0;
+    // }
+
+    bool useDirichlet() const override
+    {
+      return true;
+    }
+
+    virtual bool isDirichlet(const GlobalCoordType &x) const override
+    {
+      // neither the left nor the lower edge is Dirichlet
+      // but both of the others are
+      return true;
+    }
+
+
+    virtual const char* gridName() const
+    {
+      return "../problem/cube01.dgf";
+    }
+
+};
+
+class Problem43 : public Problem {
+  public:
+    Problem43()
     : Problem(1., 1., 0.0) {
     }
 
-    virtual ~Problem42() {}
+    virtual ~Problem43() {}
 
     double get_beta() const
     {

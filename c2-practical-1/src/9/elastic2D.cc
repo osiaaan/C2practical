@@ -489,7 +489,9 @@ int main(int argc, char ** argv)
            break;
    case 7: problem = new Problem42();
            break;
-   case 8: problem = new Problem5();
+   case 8: problem = new Problem43();
+           break;
+   case 9: problem = new Problem5();
            break;
    default: std::cerr << "Wrong problem number " << prob << std::endl;
             return 1;
